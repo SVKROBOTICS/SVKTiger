@@ -3,6 +3,30 @@
 #include <stdint.h>
 #include <stdlib.h>
 
+void IRSensorMultiplexer::setMultiplexerPins(const uint8_t *pins)
+{
+    // 4 Pins used for Multiplexer (3 Signal 1 Output)
+    const u_int8_t pinAmount = 4;
+
+    uint8_t * oldMuxPins = _muxPins;
+    /// (Re)Allocates space for dynamic array of Multiplexer 3 Signal Pins + 1 Output Pin (4 pins)
+    _muxPins = (uint8_t *)realloc(_muxPins, sizeof(uint8_t) * pinAmount);
+
+    if(_muxPins == nullptr)
+    {
+      free(oldMuxPins);
+      return;
+    }
+
+    for(uint8_t i = 0; i < pinAmount; i++)
+    {
+      _muxPins[i] = pins[i];
+    }
+
+    /// Re-initializes Calibration of robot since Pins have changed
+    _calibration.initialized = false;
+}
+
 
 void IRSensorMultiplexer::setSamplesPerSecond(uint8_t samples)
 {
@@ -10,8 +34,7 @@ void IRSensorMultiplexer::setSamplesPerSecond(uint8_t samples)
     _samplesPerSensor = samples;
 }
 
-
-void IRSensorMultiplexer::calibrate(CalibrationData &_calibration)
+void IRSensorMultiplexer::calibrate()
 {
     if(!_calibrateOn) { return; }
     calibratePrivate(_calibration);
@@ -67,9 +90,9 @@ uint16_t IRSensorMultiplexer::readLineBlack(uint16_t* sensorValues)
 
 void IRSensorMultiplexer::selectChannel(uint8_t channel)
 {
-    digitalWrite(_muxS0, bitRead(channel, 0));
-    digitalWrite(_muxS1, bitRead(channel, 1));
-    digitalWrite(_muxS2, bitRead(channel, 2));
+    digitalWrite(_muxPins[0], bitRead(channel, 0));
+    digitalWrite(_muxPins[1], bitRead(channel, 1));
+    digitalWrite(_muxPins[2], bitRead(channel, 2));
 }
 
 void IRSensorMultiplexer::calibratePrivate(CalibrationData &calibration)
@@ -164,7 +187,7 @@ void IRSensorMultiplexer::readPrivate(uint16_t *_sensorValues)
         {
             // add the conversion result
             selectChannel(i);
-            _sensorValues[i] += analogRead(_muxOut);
+            _sensorValues[i] += analogRead(_muxPins[3]);
         }
     }
 

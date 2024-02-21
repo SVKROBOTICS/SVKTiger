@@ -12,6 +12,14 @@ class IRSensorMultiplexer {
 
         ~IRSensorMultiplexer();
 
+        /*** @brief Sets Analog Multiplexer 3 Signal pins and Multiplexer Output pin.
+            IMPORTANT: PINS SHOULD BE INPUTTED IN THIS SPECIFIC ORDER
+            S0 -> S1 -> S2-> muxOutput
+            FOR EXAMPLE:   _muxPins = {A0(Signal0),A1(Signal1),A2(Signal2),A5(OUTPUT)}
+            @param pins Multiplexer analog pins that should be inserted with correct order (SEE ABOVE)
+        ***/
+        void setMultiplexerPins(const uint8_t *pins);
+
 
         /// @brief Sets number of analog readings to average per analog sensor
         /// @param samples Number of samples
@@ -49,7 +57,7 @@ class IRSensorMultiplexer {
         CalibrationData _calibration;
 
         /// @brief Calibrates Robot to black line values
-        void calibrate(CalibrationData &_calibration);
+        void calibrate();
 
         /// @brief Resets Robot Calibration values (if there are any values)
         void resetCalibration();
@@ -71,10 +79,11 @@ class IRSensorMultiplexer {
 
     
     private:
-        // Multiplexer pins for signals/outputs
-        const uint8_t _muxPins[3] = {A0,A1,A2}, _muxOut = A3;
         // Amount of IR sensors
         const uint8_t _sensorAmount = 8;
+
+        // Multiplexer signal pins and output pin
+        uint8_t *_muxPins = nullptr;
 
         // Array of sensor values
         uint16_t *_sensorValues = nullptr;
