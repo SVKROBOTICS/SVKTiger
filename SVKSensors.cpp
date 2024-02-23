@@ -205,7 +205,7 @@ void IRSensorMultiplexer::readPrivate(uint16_t *_sensorValues)
 
 }
 
-u_int16_t IRSensorMultiplexer::readLinesPrivate(uint16_t* _sensorValues)
+uint16_t IRSensorMultiplexer::readLinesPrivate(uint16_t* _sensorValues)
 {
     bool onLine = false;
     uint32_t avg = 0; // this is for the weighted total
