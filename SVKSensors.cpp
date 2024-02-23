@@ -1,5 +1,6 @@
 #include "SVKSensors.h"
 
+#include <Arduino.h>
 #include <stdint.h>
 #include <stdlib.h>
 
