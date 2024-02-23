@@ -6,7 +6,7 @@
 void IRSensorMultiplexer::setMultiplexerPins(const uint8_t *pins)
 {
     // 4 Pins used for Multiplexer (3 Signal 1 Output)
-    const u_int8_t pinAmount = 4;
+    const uint8_t pinAmount = 4;
 
     uint8_t * oldMuxPins = _muxPins;
     /// (Re)Allocates space for dynamic array of Multiplexer 3 Signal Pins + 1 Output Pin (4 pins)
