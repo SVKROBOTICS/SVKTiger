@@ -3,7 +3,7 @@
 /***
  * This is an example code for reading Calibrated Values from the SVKLine Follow robot created by
  * SVKRobotics. This robot controls and reads the IR Sensors using a 8-1 Multiplexer, that we use
- * 3 Signal Analog Pins to control what sensor is to be read, and then the Multiplexer Output to
+ * 3 Signal Digital Pins to control what sensor is to be read, and then the Multiplexer Output to
  * read the analog value of each sensor.
  * 
  * 
@@ -29,7 +29,7 @@ uint16_t sensorValues[sensorCount];
 
 void setup()
 {
-    irSensors.setMultiplexerPins((const uint8_t[]) {A0, A1, A2, A3});
+    irSensors.setMultiplexerPins((const uint8_t[]) {4, 5, 6, A0});
 
     delay(500);
     pinMode(LED_BUILTIN, OUTPUT);

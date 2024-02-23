@@ -18,10 +18,16 @@ void IRSensorMultiplexer::setMultiplexerPins(const uint8_t *pins)
       return;
     }
 
+    // sets pin array
     for(uint8_t i = 0; i < pinAmount; i++)
     {
       _muxPins[i] = pins[i];
     }
+
+    // sets up the pinModes for digital signal pins of multiplexer (first 3 pins)
+    pinMode(_muxPins[0], INPUT);
+    pinMode(_muxPins[1], INPUT);
+    pinMode(_muxPins[2], INPUT);
 
     /// Re-initializes Calibration of robot since Pins have changed
     _calibration.initialized = false;

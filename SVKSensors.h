@@ -15,8 +15,8 @@ class IRSensorMultiplexer {
         /*** @brief Sets Analog Multiplexer 3 Signal pins and Multiplexer Output pin.
             IMPORTANT: PINS SHOULD BE INPUTTED IN THIS SPECIFIC ORDER
             S0 -> S1 -> S2-> muxOutput
-            FOR EXAMPLE:   _muxPins = {A0(Signal0),A1(Signal1),A2(Signal2),A5(OUTPUT)}
-            @param pins Multiplexer analog pins that should be inserted with correct order (SEE ABOVE)
+            FOR EXAMPLE:   _muxPins = {5(Signal0),6(Signal1),7(Signal2),A0(OUTPUT)}
+            @param pins Multiplexer pins that should be inserted with correct order (SEE ABOVE)
         ***/
         void setMultiplexerPins(const uint8_t *pins);
 
