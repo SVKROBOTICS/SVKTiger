@@ -84,7 +84,17 @@ void IRSensorMultiplexer::readCalibrated(uint16_t* _sensorValues)
         value = (((int32_t)_sensorValues[i]) - calmin) * 1000 / denominator;
         }
 
-        if (value < 0) { value = 0; }
+        if (value < 0) 
+        { 
+          Serial.println("Error value negative");
+          Serial.println();
+          Serial.println();
+          Serial.println();
+          Serial.println();
+          Serial.println();
+          value = 0; 
+
+        }
         else if (value > 1000) { value = 1000; }
 
         _sensorValues[i] = value;
@@ -237,6 +247,7 @@ uint16_t IRSensorMultiplexer::readLinesPrivate(uint16_t* _sensorValues)
         if (_lastPosition < (_sensorAmount - 1) * 1000 / 2)
         {
           Serial.println("Not on line left side");
+          Serial.println(_sensorValues);
           return 0;
         }
         // If it last read to the right of center, return the max.
