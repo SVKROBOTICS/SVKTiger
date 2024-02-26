@@ -110,7 +110,7 @@ uint16_t IRSensorMultiplexer::readLineBlack(uint16_t* sensorValues)
 void IRSensorMultiplexer::selectChannel(uint8_t sensorNum)
 {
     /// This is the truth table for the multiplexer signal pins
-    const uint8_t muxPinLayout[] = { 0b101, 0b000, 0b100, 0b001, 0b010, 0b011, 0b111, 0b110 };
+    const uint8_t muxPinLayout[] = { 0b110, 0b111, 0b011, 0b010, 0b001, 0b100, 0b000, 0b101 };
 
     // This is channel C
     digitalWrite(_muxPins[0], bitRead(muxPinLayout[sensorNum], 2));
