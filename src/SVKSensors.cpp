@@ -87,11 +87,11 @@ void IRSensorMultiplexer::readCalibrated(uint16_t* _sensorValues)
         if (value < 0) 
         { 
           Serial.println("Error value negative");
-          Serial.println();
-          Serial.println();
-          Serial.println();
-          Serial.println();
-          Serial.println();
+          Serial.println(value);
+          Serial.println(value);
+          Serial.println(value);
+          Serial.println(value);
+          Serial.println(value);
           value = 0; 
 
         }
