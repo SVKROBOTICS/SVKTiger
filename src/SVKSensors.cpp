@@ -239,6 +239,9 @@ uint16_t IRSensorMultiplexer::readLinesPrivate(uint16_t* _sensorValues)
         avg += (uint32_t)value * (i * 1000);
         sum += value;
         }
+        Serial.println(value);
+        Serial.println(avg);
+        Serial.println(sum);
     }
 
     if (!onLine)
@@ -247,7 +250,6 @@ uint16_t IRSensorMultiplexer::readLinesPrivate(uint16_t* _sensorValues)
         if (_lastPosition < (_sensorAmount - 1) * 1000 / 2)
         {
           Serial.println("Not on line left side");
-          Serial.println(_sensorValues);
           return 0;
         }
         // If it last read to the right of center, return the max.
