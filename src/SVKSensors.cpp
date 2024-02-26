@@ -109,9 +109,13 @@ uint16_t IRSensorMultiplexer::readLineBlack(uint16_t* sensorValues)
 
 void IRSensorMultiplexer::selectChannel(uint8_t channel)
 {
-    digitalWrite(_muxPins[0], bitRead(channel, 0));
-    digitalWrite(_muxPins[1], bitRead(channel, 1));
-    digitalWrite(_muxPins[2], bitRead(channel, 2));
+
+    const uint8_t muxPinLayout[] = { 0b101, 0b000, 0b100, 0b001, 0b010, 0b011, 0b111, 0b110 };
+
+
+    digitalWrite(_muxPins[0], bitRead(muxPinLayout[channel], 0));
+    digitalWrite(_muxPins[1], bitRead(muxPinLayout[channel], 1));
+    digitalWrite(_muxPins[2], bitRead(muxPinLayout[channel], 2));
 }
 
 void IRSensorMultiplexer::calibratePrivate(CalibrationData &calibration)
