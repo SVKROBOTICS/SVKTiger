@@ -79,9 +79,9 @@ void loop()
     // print the sensor values as numbers from 0 to 1000, where 0 means maximum
     // reflectance and 1000 means minimum reflectance, followed by the line
     // position
+    Serial.println("Sensor array values: \n");
     for (uint8_t i = 0; i < sensorCount; i++)
     {
-        Serial.println("Sensor array values: \n");
         Serial.print(sensorValues[i]);
         Serial.print('\t');
         Serial.println("");
