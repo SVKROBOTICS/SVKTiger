@@ -69,6 +69,8 @@ void IRSensorMultiplexer::readCalibrated(uint16_t* _sensorValues)
         return;
     }
 
+    read(_sensorValues);
+
     for (uint8_t i = 0; i < _sensorAmount; i++)
     {
         uint16_t calmin, calmax;
