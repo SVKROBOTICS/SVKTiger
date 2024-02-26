@@ -218,8 +218,8 @@ void IRSensorMultiplexer::readPrivate(uint16_t *_sensorValues)
 uint16_t IRSensorMultiplexer::readLinesPrivate(uint16_t* _sensorValues)
 {
     bool onLine = false;
-    uint32_t avg = 10; // this is for the weighted total
-    uint16_t sum = 10; // this is for the denominator, which is <= 64000
+    uint32_t avg = 0; // this is for the weighted total
+    uint16_t sum = 0; // this is for the denominator, which is <= 64000
 
 
     readCalibrated(_sensorValues);

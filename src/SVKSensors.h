@@ -93,7 +93,7 @@ class IRSensorMultiplexer {
         // Sets the amount of samples that should be taken for each sensor. Higher number reduces noise but slows down the process
         uint8_t _samplesPerSensor = 4;
         // Sets max value readLine should see
-        uint16_t _maxValue = 2500;
+        uint16_t _maxValue = 1023;
         // Last known line position
         uint16_t _lastPosition = 0;
 
