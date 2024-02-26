@@ -84,10 +84,10 @@ void loop()
     {
         Serial.print(sensorValues[i]);
         Serial.print('\t');
-        Serial.println("");
+        Serial.println();
     }
     Serial.println("Line position: ");
     Serial.println(position);
     
-    delay(250);
+    delay(1000);
 }

@@ -88,13 +88,10 @@ void IRSensorMultiplexer::readCalibrated(uint16_t* _sensorValues)
 
         if (value < 0) 
         { 
-          Serial.println("Value is negative, setting value to 0...");
           value = 0; 
-
         }
         else if (value > 1000)
         {
-          Serial.println("Value is over 1000, setting value to max...");
            value = 1000; 
         }
 
