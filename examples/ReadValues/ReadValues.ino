@@ -29,7 +29,7 @@ uint16_t sensorValues[sensorCount];
 
 void setup()
 {
-    irSensors.setMultiplexerPins((const uint8_t[]) {4, 5, 6, A0});
+    irSensors.setMultiplexerPins((const uint8_t[]) {7, 4, 2, A7});
 
     delay(500);
     pinMode(LED_BUILTIN, OUTPUT);
@@ -79,14 +79,15 @@ void loop()
     // print the sensor values as numbers from 0 to 1000, where 0 means maximum
     // reflectance and 1000 means minimum reflectance, followed by the line
     // position
-    // for (uint8_t i = 0; i < sensorCount; i++)
-    // {
-    //     Serial.print(sensorValues[i]);
-    //     Serial.print('\t');
-    // }
+    for (uint8_t i = 0; i < sensorCount; i++)
+    {
+        Serial.println("Sensor array values: \n");
+        Serial.print(sensorValues[i]);
+        Serial.print('\t');
+        Serial.println("");
+    }
+    Serial.println("Line position: ");
     Serial.println(position);
     
-    Serial.print(irSensors._calibration.initialized);
-
     delay(250);
 }
