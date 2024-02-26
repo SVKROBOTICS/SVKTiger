@@ -42,7 +42,7 @@ void setup()
     // 0.1 ms per sensor * 4 samples per sensor read (default) * 8 sensors
     // * 10 reads per calibrate() call = ~32 ms per calibrate() call.
     // Call calibrate() 300 times to make calibration take about 10 seconds.
-    for(uint16_t i = 0; i < 300; i++)
+    for(uint16_t i = 0; i < 100; i++)
     {
         irSensors.calibrate();
     }
