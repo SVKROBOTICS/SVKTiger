@@ -25,7 +25,7 @@ uint16_t sensorValues[sensorCount];
 
 void setup()
 {
-    irSensors.setMultiplexerPins((const uint8_t[]) {4, 5, 6, A0});
+    irSensors.setMultiplexerPins((const uint8_t[]) {7, 4, 2, A7});
 
     Serial.begin(9600);
 }
