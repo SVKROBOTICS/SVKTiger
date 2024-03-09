@@ -1,8 +1,8 @@
-#include <SVKSensors.h>
+#include <SVKTiger.h>
 
 
 
-IRSensorMultiplexer irSensors;
+IRSensorsTiger irSensors;
 
 
 const uint8_t sensorCount = 8;

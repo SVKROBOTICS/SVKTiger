@@ -5,14 +5,14 @@
 #include <stdint.h>
 
 /// @brief Class for reading IR values using Multiplexer
-class IRSensorMultiplexer {
+class IRSensorsTiger {
     public:
         /// @brief Class Constructor
-        IRSensorMultiplexer() = default;
+        IRSensorsTiger() = default;
 
-        ~IRSensorMultiplexer();
+        ~IRSensorsTiger();
 
-        /*** @brief Sets Analog Multiplexer 3 Signal pins and Multiplexer Output pin.
+        /*** @brief Sets Multiplexer 3 Digital Signal pins and Multiplexer Analog Output pin.
             IMPORTANT: PINS SHOULD BE INPUTTED IN THIS SPECIFIC ORDER
             S0 -> S1 -> S2-> muxOutput
             FOR EXAMPLE:   _muxPins = {5(Signal0),6(Signal1),7(Signal2),A0(OUTPUT)}
@@ -36,7 +36,7 @@ class IRSensorMultiplexer {
          *                       - true for calibration on
          *                       - false for calibration off
          */
-        void setCalibrationMode(bool calibrationMode) { _calibrateOn = calibrationMode;};
+        void setCalibrationMode(bool calibrationMode) { _calibrateOn = calibrationMode; };
 
         /// @brief Gets calibration mode (on or off)
         /// @return Bool true or false
@@ -77,7 +77,7 @@ class IRSensorMultiplexer {
 
 
 
-    
+
     private:
         // Amount of IR sensors
         const uint8_t _sensorAmount = 8;

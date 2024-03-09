@@ -1,4 +1,4 @@
-#include "SVKSensors.h";
+#include "SVKTiger.h";
 
 /***
  * This is an example code for reading Raw Values from the SVKLine Follow robot created by
@@ -16,7 +16,7 @@
 */
 
 
-IRSensorMultiplexer irSensors;
+IRSensorsTiger irSensors;
 
 
 const uint8_t sensorCount = 8;

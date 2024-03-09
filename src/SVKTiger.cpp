@@ -1,10 +1,10 @@
-#include "SVKSensors.h"
+#include "SVKTiger.h"
 
 #include <Arduino.h>
 #include <stdint.h>
 #include <stdlib.h>
 
-void IRSensorMultiplexer::setMultiplexerPins(const uint8_t *pins)
+void IRSensorsTiger::setMultiplexerPins(const uint8_t *pins)
 {
     // 4 Pins used for Multiplexer (3 Signal 1 Output)
     const uint8_t pinAmount = 4;
@@ -35,19 +35,19 @@ void IRSensorMultiplexer::setMultiplexerPins(const uint8_t *pins)
 }
 
 
-void IRSensorMultiplexer::setSamplesPerSecond(uint8_t samples)
+void IRSensorsTiger::setSamplesPerSecond(uint8_t samples)
 {
     if(samples > 64) { samples = 64; }
     _samplesPerSensor = samples;
 }
 
-void IRSensorMultiplexer::calibrate()
+void IRSensorsTiger::calibrate()
 {
     if(!_calibrateOn) { return; }
     calibratePrivate(_calibration);
 }
 
-void IRSensorMultiplexer::resetCalibration()
+void IRSensorsTiger::resetCalibration()
 {
   for (uint8_t i = 0; i < _sensorAmount; i++)
   {
@@ -56,12 +56,12 @@ void IRSensorMultiplexer::resetCalibration()
   }
 }
 
-void IRSensorMultiplexer::read(uint16_t* sensorValues)
+void IRSensorsTiger::read(uint16_t* sensorValues)
 {
     readPrivate(sensorValues);
 }
 
-void IRSensorMultiplexer::readCalibrated(uint16_t* _sensorValues)
+void IRSensorsTiger::readCalibrated(uint16_t* _sensorValues)
 {
     if(!_calibration.initialized)
     {
@@ -99,12 +99,12 @@ void IRSensorMultiplexer::readCalibrated(uint16_t* _sensorValues)
     }
 }
 
-uint16_t IRSensorMultiplexer::readLineBlack(uint16_t* sensorValues)
+uint16_t IRSensorsTiger::readLineBlack(uint16_t* sensorValues)
 {
     return readLinesPrivate(sensorValues);
 }
 
-void IRSensorMultiplexer::selectChannel(uint8_t sensorNum)
+void IRSensorsTiger::selectChannel(uint8_t sensorNum)
 {
     /// This is the truth table for the multiplexer signal pins
     const uint8_t muxPinLayout[] = { 0b110, 0b111, 0b011, 0b010, 0b001, 0b100, 0b000, 0b101 };
@@ -117,7 +117,7 @@ void IRSensorMultiplexer::selectChannel(uint8_t sensorNum)
     digitalWrite(_muxPins[2], bitRead(muxPinLayout[sensorNum], 0));
 }
 
-void IRSensorMultiplexer::calibratePrivate(CalibrationData &calibration)
+void IRSensorsTiger::calibratePrivate(CalibrationData &calibration)
 {
     uint16_t sensorValues[_sensorAmount];
     uint16_t maxSensorValues[_sensorAmount];
@@ -196,7 +196,7 @@ void IRSensorMultiplexer::calibratePrivate(CalibrationData &calibration)
   }
 }
 
-void IRSensorMultiplexer::readPrivate(uint16_t *_sensorValues)
+void IRSensorsTiger::readPrivate(uint16_t *_sensorValues)
 {
     for (uint8_t i = 0; i < _sensorAmount; i++)
     {
@@ -221,7 +221,7 @@ void IRSensorMultiplexer::readPrivate(uint16_t *_sensorValues)
 
 }
 
-uint16_t IRSensorMultiplexer::readLinesPrivate(uint16_t* _sensorValues)
+uint16_t IRSensorsTiger::readLinesPrivate(uint16_t* _sensorValues)
 {
     bool onLine = false;
     uint32_t avg = 0; // this is for the weighted total
@@ -265,7 +265,7 @@ uint16_t IRSensorMultiplexer::readLinesPrivate(uint16_t* _sensorValues)
     return _lastPosition;
 }
 
-IRSensorMultiplexer::~IRSensorMultiplexer()
+IRSensorsTiger::~IRSensorsTiger()
 {
     if(_calibration.maximum)  { free(_calibration.maximum); }
     if(_calibration.minimum)  { free(_calibration.minimum); }
