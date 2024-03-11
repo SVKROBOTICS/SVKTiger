@@ -3,6 +3,7 @@
 #include <Arduino.h>
 #include <stdint.h>
 #include <stdlib.h>
+#include <cstring>
 
 void IRSensorsTiger::setMultiplexerPins(const uint8_t *pins)
 {
@@ -19,11 +20,8 @@ void IRSensorsTiger::setMultiplexerPins(const uint8_t *pins)
       return;
     }
 
-    // sets pin array
-    for(uint8_t i = 0; i < pinAmount; i++)
-    {
-      _muxPins[i] = pins[i];
-    }
+    // Sets up pin array by copying pins given
+    memcpy(_muxPins, pins, sizeof(uint8_t) * pinAmount);
 
     // sets up the pinModes for digital signal pins of multiplexer (first 3 pins)
     pinMode(_muxPins[0], OUTPUT);

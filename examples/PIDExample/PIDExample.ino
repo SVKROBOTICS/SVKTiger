@@ -1,5 +1,6 @@
 #include <SVKTiger.h>
 
+#define MAX_INTEGRAL 1400
 
 
 IRSensorsTiger irSensors;
@@ -12,9 +13,9 @@ uint16_t sensorValues[sensorCount];
 
 
 // PID constants
-uint64_t Kp = 0.1;      // Proportional constant
-uint64_t Ki = 0.001;    // Integral constant
-uint64_t Kd = 0.05;     // Derivative constant
+float Kp = 0.1;      // Proportional constant
+float Ki = 0.001;    // Integral constant
+float Kd = 0.05;     // Derivative constant
 
 // Motor Pins
 const uint8_t PWMA = 3;
@@ -24,8 +25,14 @@ const uint8_t DIRB = A1;
 
 // PID variables
 
-uint64_t lastError = 0;
-uint64_t integral = 0;
+float lastError = 0;
+float integral = 0;
+
+
+// Motor Speed variables
+const int baseSpeed = 100;
+int leftSpeed = 0;
+int rightSpeed = 0;
 
 
 void setup()
@@ -76,20 +83,20 @@ void setup()
 
 void loop() {
   // read calibrated sensors values and get position of black line from 0 to 7000 (8 sensors)
-  uint16_t position = irSensors.readLineBlack(sensorValues);
-  double error = 3500 - position; // Assuming the line is at the middle (3500)
+  float position = irSensors.readLineBlack(sensorValues);
+  float error = 3500 - position; // Assuming the line is at the middle (3500)
+
   integral += error;
-  double derivative = error - lastError;
+  integral = constrain(integral, -MAX_INTEGRAL, MAX_INTEGRAL);
+
+  float derivative = error - lastError;
   lastError = error;
 
-  double output = Kp * error + Ki * integral + Kd * derivative;
+  float output = Kp * error + Ki * integral + Kd * derivative;
 
   // Adjust motor speeds based on PID output
-  int leftSpeed = 100; // base speed
-  int rightSpeed = 100; // base speed
-
-  leftSpeed += output;
-  rightSpeed -= output;
+  leftSpeed = baseSpeed + output;
+  rightSpeed = baseSpeed - output;
 
 
     // Control the motors
