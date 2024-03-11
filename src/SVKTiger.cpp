@@ -1,9 +1,9 @@
-#include "SVKTiger.h"
+#include <SVKTiger.h>
 
 #include <Arduino.h>
 #include <stdint.h>
 #include <stdlib.h>
-#include <cstring>
+#include <string.h>
 
 void IRSensorsTiger::setMultiplexerPins(const uint8_t *pins)
 {
