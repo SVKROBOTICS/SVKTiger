@@ -1,19 +1,22 @@
 #include <SVKTiger.h>
 
-#define MAX_INTEGRAL 1400
-#define MAX_SPEED 255 // Maximum allowed speed
+#define MAX_INTEGRAL 1400 // Maximun value of integral variable
+#define MAX_SPEED 125 // Maximum allowed speed
 
+// Create class object
 IRSensorsTiger irSensors;
 
+// Sets sensor amount and pins
 const uint8_t sensorCount = 8;
 const uint8_t muxPins[4] = { 7, 4, 2, A7};
 
+// Creates array to store Ir sensor values
 uint16_t sensorValues[sensorCount];
 
 // PID constants
-float Kp = 0.1;      // Proportional constant
-float Ki = 0.001;    // Integral constant
-float Kd = 0.05;     // Derivative constant
+float Kp = 5.5;      // Proportional constant
+// float Ki = 0.001;    // Integral constant
+float Kd = 28;     // Derivative constant
 
 // Motor Pins
 const uint8_t PWMA = 3;
@@ -26,19 +29,19 @@ float lastError = 0;
 float integral = 0;
 
 // Motor Speed variables
-const int baseSpeed = 100;
+const int baseSpeed = 50;
 int leftSpeed = 0;
 int rightSpeed = 0;
 
 void setup() {
     irSensors.setMultiplexerPins(muxPins);
 
-    delay(500);
     pinMode(LED_BUILTIN, OUTPUT);
     pinMode(DIRA, OUTPUT);
     pinMode(DIRB, OUTPUT);
 
-    irSensors.setCalibrationMode(true);
+    // Sets samples taken in each loop for each sensor
+    irSensors.setSamplesPerSensor(2);
 
     for (uint16_t i = 0; i < 100; i++) {
         irSensors.calibrate();
@@ -60,7 +63,9 @@ void setup() {
     }
     Serial.println();
     Serial.println();
-    delay(1000);
+
+    // Adds delay to be able to place in starting position
+    delay(2500);
 }
 
 void loop() {
@@ -68,8 +73,8 @@ void loop() {
     float position = irSensors.readLineBlack(sensorValues);
     float error = 3500 - position; // Assuming the line is at the middle (3500)
 
-    integral += error;
-    integral = constrain(integral, -MAX_INTEGRAL, MAX_INTEGRAL);
+    // integral += error;
+    // integral = constrain(integral, -MAX_INTEGRAL, MAX_INTEGRAL);
 
     float derivative = error - lastError;
     lastError = error;
@@ -93,5 +98,5 @@ void loop() {
     digitalWrite(DIRB, rightSpeed > 0 ? HIGH : LOW); // Set right motor direction
 
     // Add a small delay to allow motors to adjust
-    delay(10);
+    delayMicroseconds(100);
 }

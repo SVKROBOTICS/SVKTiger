@@ -10,6 +10,7 @@ class IRSensorsTiger {
         /// @brief Class Constructor
         IRSensorsTiger() = default;
 
+        // Class Destructor
         ~IRSensorsTiger();
 
         /*** @brief Sets Multiplexer 3 Digital Signal pins and Multiplexer Analog Output pin.
@@ -23,11 +24,11 @@ class IRSensorsTiger {
 
         /// @brief Sets number of analog readings to average per analog sensor
         /// @param samples Number of samples
-        void setSamplesPerSecond(uint8_t samples);
+        void setSamplesPerSensor(uint8_t samples);
 
         /// @brief Returns number of analog samples per sensor
         /// @return Number of samples
-        uint8_t getSamplesPerSecond() { return _samplesPerSensor; };
+        uint8_t getSamplesPerSensor() { return _samplesPerSensor; };
 
         /**
          * @brief Sets if user wants the robot to calibrate before running or not
