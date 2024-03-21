@@ -38,10 +38,7 @@ void setup()
     // Turns calibration on
     irSensors.setCalibrationMode(true);
 
-    // analogRead() takes about 0.1 ms on an AVR.
-    // 0.1 ms per sensor * 4 samples per sensor read (default) * 8 sensors
-    // * 10 reads per calibrate() call = ~32 ms per calibrate() call.
-    // Call calibrate() 300 times to make calibration take about 10 seconds.
+    // Runs the calibrate 100 times for the robot to get max and min values read
     for(uint16_t i = 0; i < 100; i++)
     {
         irSensors.calibrate();

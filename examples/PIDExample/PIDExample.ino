@@ -1,7 +1,7 @@
 #include <SVKTiger.h>
 
 #define MAX_INTEGRAL 1400 // Maximun value of integral variable
-#define MAX_SPEED 125 // Maximum allowed speed
+#define MAX_SPEED 70 // Maximum allowed speed
 
 // Create class object
 IRSensorsTiger irSensors;
@@ -14,13 +14,13 @@ const uint8_t muxPins[4] = { 7, 4, 2, A7};
 uint16_t sensorValues[sensorCount];
 
 // PID constants
-float Kp = 5.5;      // Proportional constant
+float Kp = 17.8;      // Proportional constant
 // float Ki = 0.001;    // Integral constant
-float Kd = 28;     // Derivative constant
+float Kd = 5.35;     // Derivative constant
 
 // Motor Pins
 const uint8_t PWMA = 3;
-const uint8_t PMWB = 11;
+const uint8_t PWMB = 11;
 const uint8_t DIRA = 13;
 const uint8_t DIRB = A1;
 
@@ -29,25 +29,24 @@ float lastError = 0;
 float integral = 0;
 
 // Motor Speed variables
-const int baseSpeed = 50;
+const int baseSpeed = 30;
 int leftSpeed = 0;
 int rightSpeed = 0;
 
 void setup() {
     irSensors.setMultiplexerPins(muxPins);
 
-    pinMode(LED_BUILTIN, OUTPUT);
     pinMode(DIRA, OUTPUT);
     pinMode(DIRB, OUTPUT);
 
     // Sets samples taken in each loop for each sensor
-    irSensors.setSamplesPerSensor(2);
+    irSensors.setSamplesPerSensor(1);
 
+    // Runs the calibrate 100 times for the robot to get max and min values read
     for (uint16_t i = 0; i < 100; i++) {
         irSensors.calibrate();
     }
 
-    digitalWrite(LED_BUILTIN, LOW);
     Serial.begin(9600);
 
     // Prints minimum and maximum values read by sensors
@@ -65,7 +64,7 @@ void setup() {
     Serial.println();
 
     // Adds delay to be able to place in starting position
-    delay(2500);
+    delay(2000);
 }
 
 void loop() {
@@ -79,23 +78,23 @@ void loop() {
     float derivative = error - lastError;
     lastError = error;
 
-    float output = Kp * error + Ki * integral + Kd * derivative;
+    float output = Kp * error + Kd * derivative;
 
     // Adjust motor speeds based on PID output
     leftSpeed = baseSpeed + output;
     rightSpeed = baseSpeed - output;
 
     // Ensure motor speeds don't exceed maximum speed limit
-    leftSpeed = min(leftSpeed, MAX_SPEED);
-    rightSpeed = min(rightSpeed, MAX_SPEED);
+    leftSpeed = constrain(leftSpeed, 0, MAX_SPEED);
+    rightSpeed = constrain(rightSpeed, 0, MAX_SPEED);
 
     // Control the motors
     analogWrite(PWMA, leftSpeed); // Left motor speed control
-    analogWrite(PMWB, rightSpeed); // Right motor speed control
+    analogWrite(PWMB, rightSpeed); // Right motor speed control
 
     // Set motor directions
-    digitalWrite(DIRA, leftSpeed > 0 ? HIGH : LOW); // Set left motor direction
-    digitalWrite(DIRB, rightSpeed > 0 ? HIGH : LOW); // Set right motor direction
+    digitalWrite(DIRA, leftSpeed > 0 ? LOW : HIGH); // Set left motor direction
+    digitalWrite(DIRB, rightSpeed > 0 ? LOW : HIGH); // Set right motor direction
 
     // Add a small delay to allow motors to adjust
     delayMicroseconds(100);
