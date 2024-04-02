@@ -1,7 +1,7 @@
 #include <SVKTiger.h>
 
-#define MAX_INTEGRAL 1400 // Maximun value of integral variable
-#define MAX_SPEED 70 // Maximum allowed speed
+#define MAX_INTEGRAL 2800 // Maximun value of integral variable
+#define MAX_SPEED 85 // Maximum allowed speed
 
 // Create class object
 IRSensorsTiger irSensors;
@@ -14,9 +14,9 @@ const uint8_t muxPins[4] = { 7, 4, 2, A7};
 uint16_t sensorValues[sensorCount];
 
 // PID constants
-float Kp = 17.8;      // Proportional constant
-// float Ki = 0.001;    // Integral constant
-float Kd = 5.35;     // Derivative constant
+float Kp = 13.6;      // Proportional constant
+float Ki = 0.09;    // Integral constant
+float Kd = 3.6;     // Derivative constant
 
 // Motor Pins
 const uint8_t PWMA = 3;
