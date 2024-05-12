@@ -1,7 +1,7 @@
 #include <SVKTiger.h>
 
 #define MAX_INTEGRAL 2800 // Maximun value of integral variable
-#define MAX_SPEED 85 // Maximum allowed speed
+#define MAX_SPEED 140 // Maximum allowed speed
 
 // Create class object
 IRSensorsTiger irSensors;
@@ -14,9 +14,9 @@ const uint8_t muxPins[4] = { 7, 4, 2, A7};
 uint16_t sensorValues[sensorCount];
 
 // PID constants
-float Kp = 13.6;      // Proportional constant
+float Kp = 0.07;      // Proportional constant
 float Ki = 0.09;    // Integral constant
-float Kd = 3.6;     // Derivative constant
+float Kd = 0.3;     // Derivative constant
 
 // Motor Pins
 const uint8_t PWMA = 3;
@@ -29,7 +29,7 @@ float lastError = 0;
 float integral = 0;
 
 // Motor Speed variables
-const int baseSpeed = 30;
+const int baseSpeed = 70;
 int leftSpeed = 0;
 int rightSpeed = 0;
 
@@ -81,8 +81,8 @@ void loop() {
     float output = Kp * error + Kd * derivative;
 
     // Adjust motor speeds based on PID output
-    leftSpeed = baseSpeed + output;
-    rightSpeed = baseSpeed - output;
+    leftSpeed = baseSpeed - output;
+    rightSpeed = baseSpeed + output;
 
     // Ensure motor speeds don't exceed maximum speed limit
     leftSpeed = constrain(leftSpeed, 0, MAX_SPEED);
