@@ -1,8 +1,27 @@
-# SVKTiger Line Follow Robot
+# SVK Robotics Tiger Line Follow Robot
 
-![Robot Image](http://svkrobotics.com/static/media/logo%20SVK_2.c01f44d9500d9b343484.png)
+This is a custom Arduino library for the SVK Tiger Line Follow Robot that includes a modified version of the IRremote library for remote operation.
 
-## About 
+## Installation Instructions
 
-This is an Arduino library created for the **SVKRobotics Tiger Line Follow Robot**. It is a complete robot kit created by [SVKRobotics](https://svkrobotics.com), which utilizes a custom driver and a custom IR sensor array to accurately and quickly detect black line changes. To find out more about this robot visit [svkrobotics.com][https://svkrobotics.com].
+1. **Download the ZIP file:**
+   - Go to the [SVK Robotics Tiger repository in github](https://github.com/SVKROBOTICS/SVKTiger).
+   - Press the "Code" button then press "Download ZIP", or you can [**click here**](https://github.com/SVKROBOTICS/SVKTiger/archive/refs/heads/main.zip).
 
+2. **Remove Existing IRremote Library:**
+   - Before importing the new library, ensure that any existing installations of the IRremote library are removed or renamed to prevent conflicts.
+   - The Arduino libraries folder is typically located in your sketchbook directory. You can find the location in the Arduino IDE by going to `File > Preferences` and looking for the `Sketchbook location` path.
+
+3. **Import the Library:**
+   - Open the Arduino IDE.
+   - Go to `Sketch > Include Library > Add .ZIP Library...`.
+   - Select the downloaded `SVKTiger-main.zip` file to import it.
+
+4. **Use the Library:**
+   - After importing, you can include `SVKTiger` in your sketches:
+     ```cpp
+     #include <SVKTiger.h>
+     ```
+
+## Notes
+- Ensure that no other versions of the IRremote library are installed in the Arduino libraries folder, as they may conflict with the modified version provided.
