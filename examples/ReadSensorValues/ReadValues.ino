@@ -1,4 +1,4 @@
-#include <SVKTiger.h>;
+#include <SVKTigerSensors.h>;
 
 /***
  * This is an example code for reading Calibrated Values from the SVKLine Follow robot created by
@@ -20,60 +20,61 @@
 */
 
 
-IRSensorsTiger irSensors;
+SVKTigerSensors sensors;
 
 
-const uint8_t sensorCount = 8;
-uint16_t sensorValues[sensorCount];
+const uint8_t sensorCount = sensors.getSensorAmount();
+uint16_t* sensorValues = nullptr;
 
 
 void setup()
 {
-    irSensors.setMultiplexerPins((const uint8_t[]) {7, 4, 2, A7});
+    sensors.setMultiplexerPins();
 
     delay(500);
-    pinMode(LED_BUILTIN, OUTPUT);
-    digitalWrite(LED_BUILTIN, HIGH);
-
-    // Turns calibration on
-    irSensors.setCalibrationMode(true);
 
     // Runs the calibrate 100 times for the robot to get max and min values read
     for(uint16_t i = 0; i < 100; i++)
     {
-        irSensors.calibrate();
+        sensors.calibrate();
     }
 
-    digitalWrite(LED_BUILTIN, LOW);
-
     Serial.begin(9600);
+
+    Serial.println("Start of calibration");
 
     // Prints minimum and maximum values read by sensors
     for (uint8_t i = 0; i < sensorCount; i++)
     {
-        Serial.print(irSensors._calibration.minimum[i]);
+        Serial.print(sensors._calibration.minimum[i]);
         Serial.print(' ');
     }
     Serial.println();
 
     for (uint8_t i = 0; i < sensorCount; i++)
     {
-        Serial.print(irSensors._calibration.maximum[i]);
+        Serial.print(sensors._calibration.maximum[i]);
         Serial.print(' ');
     }
     Serial.println();
     Serial.println();
+
+    Serial.println("End of calibration");
+    Serial.println();
+
     delay(1000);
 }
 
 
 void loop()
 {
-    // read calibrated sensors values and get position of black line from 0 to 7000 (8 sensors)
-    uint16_t position = irSensors.readLineBlack(sensorValues);
+    // Read calibrated sensors values and get position of black line from 0 to 7000 (8 sensors)
+    uint16_t position = sensors.readLineBlack();
 
+    // Store Sensor values array to variable
+    sensorValues = sensors.getSensorValues();
 
-    // print the sensor values as numbers from 0 to 1000, where 0 means maximum
+    // Print the sensor values as numbers from 0 to 1000, where 0 means maximum
     // reflectance and 1000 means minimum reflectance, followed by the line
     // position
     Serial.println("Sensor array values: \n");

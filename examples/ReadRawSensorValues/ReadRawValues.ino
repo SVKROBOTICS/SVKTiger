@@ -1,4 +1,4 @@
-#include "SVKTiger.h";
+#include <SVKTigerSensors.h>;
 
 /***
  * This is an example code for reading Raw Values from the SVKLine Follow robot created by
@@ -16,26 +16,29 @@
 */
 
 
-IRSensorsTiger irSensors;
+SVKTigerSensors sensors;
 
 
-const uint8_t sensorCount = 8;
-uint16_t sensorValues[sensorCount];
+const uint8_t sensorCount = sensors.getSensorAmount();
+uint16_t* sensorValues = nullptr;
 
 
 void setup()
 {
-    irSensors.setMultiplexerPins((const uint8_t[]) {7, 4, 2, A7});
-
+    sensors.setMultiplexerPins();
     Serial.begin(9600);
 }
 
 
 void loop()
 {
-    irSensors.read(sensorValues);
+    // Read Raw Analog values from sensors
+    sensors.read();
 
-    // print the sensor values as numbers from 0 to 1023, where 0 means maximum
+    // Store Sensor values array to variable
+    sensorValues = sensors.getSensorValues();
+
+    // Print the sensor values as numbers from 0 to 1023, where 0 means maximum
     // reflectance and 1023 means minimum reflectance
     for (uint8_t i = 0; i < sensorCount; i++)
     {

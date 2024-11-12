@@ -1,51 +1,56 @@
-#include <SVKTiger.h>
+#include <SVKTigerSensors.h>
+#include <SVKTigerMotors.h>
 
 #define MAX_INTEGRAL 2800 // Maximun value of integral variable
-#define MAX_SPEED 140 // Maximum allowed speed
+#define DEBUG_MODE 0 // Debug Mode for reading sensor values via serial, 0 for debug mode off, 1 for debug mode on
 
-// Create class object
-IRSensorsTiger irSensors;
+// This code example uses a macro `#define USE_PWM_REGISTERS` that is default on inside the source code,
+// for the motors to use direct register writing, which achieves faster writing and better performance.
+// If you want to disable direct register writing and instead want the SVKTigerMotos to use normal analogWrites, uncomment line below.
+
+// #undef USE_PWM_REGISTERS
+
+
+#define MAX_SPEED 200 // Robot Max Speed
+#define BASE_SPEED 50 // Robot base starting speed
+#define MIN_ACCEL 5 // Minimum acceleration
+#define MAX_ACCEL 15 // Max acceleration
+
+
+// Create Sensor class instance
+SVKTigerSensors sensors;
+// Create Motor class instance (pinModes done in constructor, no need for in setup)
+// Motor Parameters are _maxSpeed, _baseSpeed. Check SVKTigerMotors->Examples, or the header files for more info
+SVKTigerMotors motors(MAX_SPEED, BASE_SPEED);
+
 
 // Sets sensor amount and pins
-const uint8_t sensorCount = 8;
-const uint8_t muxPins[4] = { 7, 4, 2, A7};
-
-// Creates array to store Ir sensor values
-uint16_t sensorValues[sensorCount];
+const uint8_t sensorCount = sensors.getSensorAmount();
 
 // PID constants
 float Kp = 0.07;      // Proportional constant
 float Ki = 0.09;    // Integral constant
 float Kd = 0.3;     // Derivative constant
 
-// Motor Pins
-const uint8_t PWMA = 3;
-const uint8_t PWMB = 11;
-const uint8_t DIRA = 13;
-const uint8_t DIRB = A1;
-
 // PID variables
-float lastError = 0;
-float integral = 0;
+int lastError = 0;
+int integral = 0;
 
-// Motor Speed variables
-const int baseSpeed = 70;
-int leftSpeed = 0;
-int rightSpeed = 0;
 
 void setup() {
-    irSensors.setMultiplexerPins(muxPins);
+    sensors.setMultiplexerPins();
 
-    pinMode(DIRA, OUTPUT);
-    pinMode(DIRB, OUTPUT);
-
-    // Sets samples taken in each loop for each sensor
-    irSensors.setSamplesPerSensor(1);
+    // Sets motor accelerations
+    motors.setMinAcceleration(MIN_ACCEL);
+    motors.setMaxAcceleration(MAX_ACCEL);
 
     // Runs the calibrate 100 times for the robot to get max and min values read
-    for (uint16_t i = 0; i < 100; i++) {
-        irSensors.calibrate();
+    for (uint8_t i = 0; i < 100; i++) {
+        sensors.calibrate();
     }
+
+
+    #if DEBUG_MODE
 
     Serial.begin(9600);
 
@@ -63,39 +68,27 @@ void setup() {
     Serial.println();
     Serial.println();
 
+    #endif
+
     // Adds delay to be able to place in starting position
     delay(2000);
 }
 
 void loop() {
     // read calibrated sensors values and get position of black line from 0 to 7000 (8 sensors)
-    float position = irSensors.readLineBlack(sensorValues);
-    float error = 3500 - position; // Assuming the line is at the middle (3500)
+    int position = sensors.readLineBlack();
+    int error = 3500 - position; // Assuming the line is at the middle (3500)
 
-    // integral += error;
-    // integral = constrain(integral, -MAX_INTEGRAL, MAX_INTEGRAL);
+    integral += error;
+    integral = constrain(integral, -MAX_INTEGRAL, MAX_INTEGRAL);
 
-    float derivative = error - lastError;
+    int derivative = error - lastError;
     lastError = error;
 
-    float output = Kp * error + Kd * derivative;
+    int output = Kp * error + Ki * integral + Kd * derivative;
 
-    // Adjust motor speeds based on PID output
-    leftSpeed = baseSpeed - output;
-    rightSpeed = baseSpeed + output;
+    // Main motor method, takes PID output and error to calculate and run both motor speeds correctly
+    // Pass output and error to motor methods to start running
+    motors.runMotors(output, error);
 
-    // Ensure motor speeds don't exceed maximum speed limit
-    leftSpeed = constrain(leftSpeed, 0, MAX_SPEED);
-    rightSpeed = constrain(rightSpeed, 0, MAX_SPEED);
-
-    // Control the motors
-    analogWrite(PWMA, leftSpeed); // Left motor speed control
-    analogWrite(PWMB, rightSpeed); // Right motor speed control
-
-    // Set motor directions
-    digitalWrite(DIRA, leftSpeed > 0 ? LOW : HIGH); // Set left motor direction
-    digitalWrite(DIRB, rightSpeed > 0 ? LOW : HIGH); // Set right motor direction
-
-    // Add a small delay to allow motors to adjust
-    delayMicroseconds(100);
 }

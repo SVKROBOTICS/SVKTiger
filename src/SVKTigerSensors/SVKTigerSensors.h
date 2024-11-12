@@ -1,28 +1,28 @@
 /// Header file for reading IR Follow Line Sensors using multiplexer in SVK Robotics Line Follow Robot
-
 #pragma once
 
-#include <stdint.h>
 
 /// @brief Class for reading IR values using Multiplexer
-class IRSensorsTiger {
+class SVKTigerSensors {
     public:
         /// @brief Class Constructor
-        IRSensorsTiger() = default;
+        SVKTigerSensors() = default;
 
-        // Class Destructor
-        ~IRSensorsTiger();
+        /// @brief Class Destructor
+        ~SVKTigerSensors() = default;
 
-        /*** @brief Sets Multiplexer 3 Digital Signal pins and Multiplexer Analog Output pin.
-            IMPORTANT: PINS SHOULD BE INPUTTED IN THIS SPECIFIC ORDER
-            S0 -> S1 -> S2-> muxOutput
-            FOR EXAMPLE:   _muxPins = {5(Signal0),6(Signal1),7(Signal2),A0(OUTPUT)}
-            @param pins Multiplexer pins that should be inserted with correct order (SEE ABOVE)
-        ***/
-        void setMultiplexerPins(const uint8_t *pins);
+        /// @brief Returns number of IR Sensors in the program
+        /// @return Number of IR Sensors
+        uint8_t getSensorAmount() const { return _sensorAmount; }
 
+        /// @brief Sets Multiplexer 3 Digital Signal pins and Multiplexer Analog Output pin.
+        void setMultiplexerPins();
 
-        /// @brief Sets number of analog readings to average per analog sensor
+        /// @brief Returns the whole sensor value array read from each sensor via pointer. WARNING do not modify any values, as pointer is showing to _sensorValues address and will alter any values saved!
+        /// @return Pointer pointing to _sensorValues array to be viewed in main program, (USE AS READ ONLY).
+        u_int16_t* getSensorValues() { return _sensorValues; }
+
+        /// @brief Sets number of analog readings to average per analog sensor. WARNING for best performance, number of samples SHOULD BE a power of 2 (for example 1, 2, 4, 8 etc...).
         /// @param samples Number of samples
         void setSamplesPerSensor(uint8_t samples);
 
@@ -40,7 +40,7 @@ class IRSensorsTiger {
         void setCalibrationMode(bool calibrationMode) { _calibrateOn = calibrationMode; };
 
         /// @brief Gets calibration mode (on or off)
-        /// @return Bool true or false
+        /// @return True for calibration on, False for calibration off
         bool getCalibrationMode() { return _calibrateOn; }
 
         /// @brief Stores sensor calibration data
@@ -49,9 +49,9 @@ class IRSensorsTiger {
             /// @brief checks whether array pointers have been allocated and initialized
             bool initialized = false;
             /// @brief Minimum reading read during calibration
-            uint16_t *minimum = nullptr;
+            uint16_t minimum[_sensorAmount];
             /// @brief Maximum reading read during calibration
-            uint16_t *maximum = nullptr;
+            uint16_t maximum[_sensorAmount];
         };
 
         /// @brief Calibration data
@@ -64,35 +64,32 @@ class IRSensorsTiger {
         void resetCalibration();
 
         /// @brief Reads IR sensor array raw analog values
-        /// @param _sensorValues values of ir sensors
-        void read(uint16_t *sensorValues);
+        void read();
 
         /// @brief Reads IR sensors and gives calibrated values from 0 to 1000
-        /// @param sensorValues Calibrated sensor values
-        void readCalibrated(uint16_t *sensorValues);
+        void readCalibrated();
 
-        /// @brief Reads if robot is seeing the black line
-        /// @param _sensorValues IR Sensor values
-        /// @return returns number representing black line
-        uint16_t readLineBlack(uint16_t* sensorValues);
-
-
+        /// @brief Detects if robot is seeing black line and returns its position based on sensor readings
+        /// @return Number representing position of the black line using sensor (number from 0 - 7000)
+        uint16_t readLineBlack();
 
 
     private:
         // Amount of IR sensors
-        const uint8_t _sensorAmount = 8;
+        static const uint8_t _sensorAmount = 8;
 
         // Multiplexer signal pins and output pin
-        uint8_t *_muxPins = nullptr;
+        static const uint8_t _muxPins = { 7, 4, 2, A7};
 
         // Array of sensor values
-        uint16_t *_sensorValues = nullptr;
+        uint16_t _sensorValues[_sensorAmount];
 
         // checks if calibration is on and should the robot calibrate or not
         bool _calibrateOn = true;
         // Sets the amount of samples that should be taken for each sensor. Higher number reduces noise but slows down the process
-        uint8_t _samplesPerSensor = 4;
+        uint8_t _samplesPerSensor = 1;
+        // Sets bit shift amount based on the log2 result of the _samplesPerSensor, used in the averaging of the sensor values
+        uint8_t _shiftAmount = 0;
         // Sets max value readLine should see
         uint16_t _maxValue = 1023;
         // Last known line position
@@ -102,11 +99,11 @@ class IRSensorsTiger {
         void selectChannel(uint8_t channel);
 
         /// @brief Handles actually calibrating robot
-        void calibratePrivate(CalibrationData &calibration);
+        void calibratePrivate();
 
         /// Reads sensors
-        void readPrivate(uint16_t* _sensorValues);
+        void readPrivate();
 
         /// Sees if robot is seeing a line
-        uint16_t readLinesPrivate(uint16_t* _sensorValues);
+        uint16_t readLinesPrivate();
 };
